@@ -4,6 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+
+#include "GameModeCpp.h"
+#include "SaveLoadManager.h"
+#include "Manager.h"
+
 #include "GoldenRunExampleCharacter.generated.h"
 
 UCLASS(Blueprintable)
@@ -16,6 +21,11 @@ public:
 
 	// Called every frame.
 	virtual void Tick(float DeltaSeconds) override;
+
+	int32 GoldCount;
+	int32 DigCount;
+	int32 MaxDig = 20;
+	TArray<UTexture2D*> ImageArray;
 
 	/** Returns TopDownCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
@@ -36,5 +46,6 @@ private:
 	/** A decal that projects to the cursor location. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UDecalComponent* CursorToWorld;
+
 };
 

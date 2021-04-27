@@ -1,6 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "GoldenRunExamplePlayerController.h"
+
+#include <UIAutomationCore.h>
+
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
@@ -31,6 +34,7 @@ void AGoldenRunExamplePlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AGoldenRunExamplePlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &AGoldenRunExamplePlayerController::OnSetDestinationReleased);
+	InputComponent->BindAction("ActivateDig", IE_Pressed, this, &AGoldenRunExamplePlayerController::OnRightMouseButtonPressed);
 
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AGoldenRunExamplePlayerController::MoveToTouchLocation);
@@ -110,3 +114,9 @@ void AGoldenRunExamplePlayerController::OnSetDestinationReleased()
 	// clear flag to indicate we should stop updating the destination
 	bMoveToMouseCursor = false;
 }
+
+void AGoldenRunExamplePlayerController::OnRightMouseButtonPressed()
+{
+	int32 kk = 1;
+}
+

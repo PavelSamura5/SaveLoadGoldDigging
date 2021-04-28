@@ -22,9 +22,16 @@ public:
 	// Called every frame.
 	virtual void Tick(float DeltaSeconds) override;
 
-	int32 GoldCount;
-	int32 DigCount;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int32 GoldCount = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int32 DigCount = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 MaxDig = 20;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<UTexture2D*> ImageArray;
 
 	/** Returns TopDownCameraComponent subobject **/

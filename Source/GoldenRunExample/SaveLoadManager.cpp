@@ -30,9 +30,9 @@ void ASaveLoadManager::Tick(float DeltaTime)
 
 }
 
-SaveInformation ASaveLoadManager::Save(ACharacter* Character)
+FSaveInformation ASaveLoadManager::Save(ACharacter* Character)
 {
-	SaveInformation Saved;
+	FSaveInformation Saved;
 	
 	if(Cast<AGoldenRunExampleCharacter>(Character))
 	{
@@ -43,26 +43,31 @@ SaveInformation ASaveLoadManager::Save(ACharacter* Character)
 		Saved.CurrentGold = GetCharacter->GoldCount;
 		Saved.GoldArrayTexture2D = GetCharacter->ImageArray;
 
-		SaveArrayElementInfo ArrayInfo;
+		FSaveArrayElementInfo ArrayInfo;
 		TArray<AActor*> AllActor;
 
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGenerateMap::StaticClass(), AllActor);
 
 		for (AActor* TActor: AllActor)
 		{
-			AGenerateMap* MyActor = Cast<AGenerateMap>(Character);
-			if(MyActor != nullptr)
+			AGenerateMap* MyActor;
+			
+			if(Cast<AGenerateMap>(TActor))
 			{
+				MyActor = Cast<AGenerateMap>(TActor);
 				ArrayInfo.ClassLocation = MyActor->GetActorLocation();
 				ArrayInfo.ClassHole = MyActor->StaticClass();
 				Saved.ArrayInfo.Add(ArrayInfo);
 			}
-		}	
+		}
+		return Saved;
 	}
-	return Saved;
+	else
+		return Saved;
+	
 }
 
-bool ASaveLoadManager::Load(ACharacter* Character, SaveInformation Saved)
+bool ASaveLoadManager::Load(ACharacter* Character, FSaveInformation Saved)
 {
 	if(Cast<AGoldenRunExampleCharacter>(Character))
 	{
@@ -72,8 +77,13 @@ bool ASaveLoadManager::Load(ACharacter* Character, SaveInformation Saved)
 		GetCharacter->ImageArray = Saved.GoldArrayTexture2D;
 
 		for (int IndexWeight = 0; IndexWeight < Saved.ArrayInfo.Num(); IndexWeight++)
+		{
 			AGenerateMap* SpawnedHoleActorRef = GetWorld()->SpawnActor<AGenerateMap>(Saved.ArrayInfo[IndexWeight].ClassLocation, FRotator::ZeroRotator);
+			SpawnedHoleActorRef->SetActorScale3D(FVector(0.5f, 0.5f, 0.5f));
+		}
 
+		GetCharacter->SetActorLocation(FVector(Saved.ActorLocation.X, Saved.ActorLocation.Y, Saved.ActorLocation.Z + 500.f));
+		
 		return true;
 	}
 	else

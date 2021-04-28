@@ -28,11 +28,12 @@ protected:
 	
 	float DigHeight = 3;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool bDroppedGold = false;
-
 public:	
 	// Called every frame
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bDroppedGold = false;
+	
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)

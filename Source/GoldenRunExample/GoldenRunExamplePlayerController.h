@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Gold.h"
 #include "GoldenRunExamplePlayerController.generated.h"
 
 UCLASS()
@@ -13,6 +14,14 @@ class AGoldenRunExamplePlayerController : public APlayerController
 
 public:
 	AGoldenRunExamplePlayerController();
+
+	bool bPressed = false;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool ResultDigging = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	AGold* Gold;
 
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
@@ -40,6 +49,7 @@ protected:
 	void OnSetDestinationReleased();
 
 	void OnRightMouseButtonPressed();
+	void OnRightMouseButtonReleased();
 };
 
 

@@ -23,10 +23,13 @@ class GOLDENRUNEXAMPLE_API AGameModeCpp : public AGameModeBase
 	AGameModeCpp();
 
 	// Called every frame
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class ASaveLoadManager* SaveLoadManagerReference;
 
+	UFUNCTION(BlueprintCallable)
 	void DefaultStartGame();
 
-	void LoadStartGame(TArray<SaveInformation> ArrayInfo);
+	UFUNCTION(BlueprintCallable)
+	void LoadStartGame(TArray<FSaveInformation> ArrayInfo);
 
 };

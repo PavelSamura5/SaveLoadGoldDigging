@@ -44,7 +44,7 @@ bool AGenerateMap::Digging(AGold*& ReturnActor)
 {
 	DigHeight = DigHeight - 1;
 
-	if (FMath::RandRange(0, 100) > 50)
+	if (FMath::RandRange(0, 1000) > 500)
 	{
 		AGold* SpawnedHoleActorRef = GetWorld()->SpawnActor<AGold>(GetActorLocation(), GetActorRotation());
 		ReturnActor = SpawnedHoleActorRef;

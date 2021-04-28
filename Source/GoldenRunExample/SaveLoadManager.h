@@ -7,18 +7,31 @@
 
 #include "SaveLoadManager.generated.h"
 
-struct SaveArrayElementInfo
+USTRUCT(BlueprintType, Blueprintable)
+struct FSaveArrayElementInfo
 {
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UClass* ClassHole;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector ClassLocation;
 };
 
-struct SaveInformation
+USTRUCT(BlueprintType, Blueprintable)
+struct FSaveInformation
 {
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector ActorLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 CurrentDig;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 CurrentGold;
-	TArray<SaveArrayElementInfo> ArrayInfo;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FSaveArrayElementInfo> ArrayInfo;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<UTexture2D*> GoldArrayTexture2D;
 };
 
@@ -39,6 +52,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	SaveInformation Save(ACharacter* Character);
-	bool Load(ACharacter* Character, SaveInformation Saved);
+	UFUNCTION(BlueprintCallable)
+	FSaveInformation Save(ACharacter* Character);
+
+	UFUNCTION(BlueprintCallable)
+	bool Load(ACharacter* Character, FSaveInformation Saved);
 };

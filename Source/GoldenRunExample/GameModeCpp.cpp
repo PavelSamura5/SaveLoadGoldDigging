@@ -2,8 +2,25 @@
 
 
 #include "GameModeCpp.h"
+#include "GoldenRunExamplePlayerController.h"
+#include "GoldenRunExampleCharacter.h"
+#include "UObject/ConstructorHelpers.h"
 
-AGameModeCpp::AGameModeCpp(){ }
+AGameModeCpp::AGameModeCpp()
+{
+	// use our custom PlayerController class
+	PlayerControllerClass = AGoldenRunExamplePlayerController::StaticClass();
+
+	// set default pawn class to our Blueprinted character
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/GoldenRunExample/Characters/TopDownCharacter"));
+	if (PlayerPawnBPClass.Class != nullptr)
+	{
+		DefaultPawnClass = PlayerPawnBPClass.Class;
+	}
+	
+	static ConstructorHelpers::FObjectFinder<UClass> HUDFinder(TEXT("Blueprint'/Game/GoldenRunExample/HUD/BP_HUDGame.BP_HUDGame_C'"));
+	HUDClass = (UClass *) HUDFinder.Object;
+}
 
 void AGameModeCpp::DefaultStartGame()
 {
@@ -21,7 +38,7 @@ void AGameModeCpp::DefaultStartGame()
 	SaveLoadManagerReference = GetWorld()->SpawnActor<ASaveLoadManager>(FVector::ZeroVector, FRotator::ZeroRotator);
 }
 
-void AGameModeCpp::LoadStartGame(TArray<SaveInformation> ArrayInfo)
+void AGameModeCpp::LoadStartGame(TArray<FSaveInformation> ArrayInfo)
 {
 	for (int Index = 0; Index < ArrayInfo.Num(); Index++)
 	{

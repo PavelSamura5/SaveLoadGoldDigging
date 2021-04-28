@@ -8,6 +8,7 @@
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "GoldenRunExampleCharacter.h"
+#include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 
 AGoldenRunExamplePlayerController::AGoldenRunExamplePlayerController()
@@ -25,6 +26,18 @@ void AGoldenRunExamplePlayerController::PlayerTick(float DeltaTime)
 	{
 		MoveToMouseCursor();
 	}
+	
+	if(bPressed)
+	{
+		FHitResult Hit;
+		GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+
+		if(Cast<AGold>(Hit.GetActor()))
+		{
+			Gold = Cast<AGold>(Hit.GetActor());
+			Gold->SetActorLocation(FVector(Hit.Location.X, Hit.Location.Y, Gold->GetActorLocation().Z));
+		}
+	}
 }
 
 void AGoldenRunExamplePlayerController::SetupInputComponent()
@@ -35,6 +48,7 @@ void AGoldenRunExamplePlayerController::SetupInputComponent()
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AGoldenRunExamplePlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &AGoldenRunExamplePlayerController::OnSetDestinationReleased);
 	InputComponent->BindAction("ActivateDig", IE_Pressed, this, &AGoldenRunExamplePlayerController::OnRightMouseButtonPressed);
+	InputComponent->BindAction("ActivateDig", IE_Released, this, &AGoldenRunExamplePlayerController::OnRightMouseButtonReleased);
 
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AGoldenRunExamplePlayerController::MoveToTouchLocation);
@@ -117,6 +131,40 @@ void AGoldenRunExamplePlayerController::OnSetDestinationReleased()
 
 void AGoldenRunExamplePlayerController::OnRightMouseButtonPressed()
 {
-	int32 kk = 1;
+	FHitResult Hit;
+	AGoldenRunExampleCharacter* myCharacter = Cast<AGoldenRunExampleCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+ 
+	if (Hit.bBlockingHit){
+		if (Hit.Actor != nullptr)
+		{
+			if(Cast<AGenerateMap>(Hit.GetActor()))
+			{
+				AGenerateMap* Selected = Cast<AGenerateMap>(Hit.GetActor());
+				const bool ResDigging = Selected->Digging(Gold);
+				myCharacter->DigCount = myCharacter->DigCount - 1;
+					
+				if(myCharacter->DigCount > 0 && ResDigging)
+				{
+					ResultDigging = Selected->bDroppedGold;
+				}
+				else if(!ResDigging)
+				{
+					Selected->Destroy();
+				}
+			}
+			else if(Cast<AGold>(Hit.GetActor()))
+			{
+				bPressed = true;
+			}
+		}
+	}  
 }
+
+void AGoldenRunExamplePlayerController::OnRightMouseButtonReleased()
+{
+	bPressed = false;
+}
+
 
